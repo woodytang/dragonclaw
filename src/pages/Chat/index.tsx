@@ -16,6 +16,7 @@ import { ChatToolbar } from './ChatToolbar';
 import { extractImages, extractText, extractThinking, extractToolUse } from './message-utils';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
+import logoSvg from '@/assets/logo.svg';
 import { useStickToBottomInstant } from '@/hooks/use-stick-to-bottom-instant';
 import { useMinLoading } from '@/hooks/use-min-loading';
 
@@ -98,8 +99,18 @@ export function Chat() {
       </div>
 
       {/* Messages Area */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4">
-        <div ref={contentRef} className="max-w-4xl mx-auto space-y-4">
+      <div ref={scrollRef} className="relative flex-1 overflow-y-auto px-4 py-4">
+        {/* Watermark Logo Background */}
+        <div className="pointer-events-none select-none absolute bottom-6 right-6 z-0">
+          <img
+            src={logoSvg}
+            alt=""
+            aria-hidden="true"
+            className="w-56 h-56 md:w-64 md:h-64 opacity-[0.05] dark:opacity-[0.07] animate-watermark-pulse"
+            draggable={false}
+          />
+        </div>
+        <div ref={contentRef} className="relative z-10 max-w-4xl mx-auto space-y-4">
           {isEmpty ? (
             <WelcomeScreen />
           ) : (
@@ -198,7 +209,7 @@ function WelcomeScreen() {
 
   return (
     <div className="flex flex-col items-center justify-center text-center h-[60vh]">
-      <h1 className="text-4xl md:text-5xl font-serif text-foreground/80 mb-8 font-normal tracking-tight" style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", Times, serif' }}>
+      <h1 className="text-3xl font-bold text-foreground/80 mb-8 tracking-tight">
         {t('welcome.subtitle')}
       </h1>
 

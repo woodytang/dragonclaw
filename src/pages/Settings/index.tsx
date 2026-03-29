@@ -454,7 +454,7 @@ export function Settings() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-start justify-between mb-12 shrink-0 gap-4">
           <div>
-            <h1 className="text-5xl md:text-6xl font-serif text-foreground mb-3 font-normal tracking-tight" style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", Times, serif' }}>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground mb-3">
               {t('title')}
             </h1>
             <p className="text-[17px] text-foreground/70 font-medium">
@@ -468,7 +468,7 @@ export function Settings() {
 
           {/* Appearance */}
           <div>
-            <h2 className="text-3xl font-serif text-foreground mb-6 font-normal tracking-tight" style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", Times, serif' }}>
+            <h2 className="text-xl font-bold tracking-tight text-foreground mb-6">
               {t('appearance.title')}
             </h2>
             <div className="space-y-6">
@@ -501,7 +501,7 @@ export function Settings() {
                   </Button>
                 </div>
               </div>
-              <div className="space-y-3">
+              {/* <div className="space-y-3">
                 <Label className="text-[15px] font-medium text-foreground/80">{t('appearance.language')}</Label>
                 <div className="flex flex-wrap gap-2">
                   {SUPPORTED_LANGUAGES.map((lang) => (
@@ -515,7 +515,7 @@ export function Settings() {
                     </Button>
                   ))}
                 </div>
-              </div>
+              </div> */}
               <div className="flex items-center justify-between">
                 <div>
                   <Label className="text-[15px] font-medium text-foreground/80">{t('appearance.launchAtStartup')}</Label>
@@ -535,7 +535,7 @@ export function Settings() {
 
           {/* Gateway */}
           <div>
-            <h2 className="text-3xl font-serif text-foreground mb-6 font-normal tracking-tight" style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", Times, serif' }}>
+            <h2 className="text-xl font-bold tracking-tight text-foreground mb-6">
               {t('gateway.title')}
             </h2>
             <div className="space-y-6">
@@ -640,7 +640,7 @@ export function Settings() {
             <>
               <Separator className="bg-black/5 dark:bg-white/5" />
               <div data-testid="settings-developer-section">
-                <h2 data-testid="settings-developer-title" className="text-3xl font-serif text-foreground mb-6 font-normal tracking-tight" style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", Times, serif' }}>
+                <h2 data-testid="settings-developer-title" className="text-xl font-bold tracking-tight text-foreground mb-6">
                   {t('developer.title')}
                 </h2>
                 <div className="space-y-8">
@@ -1009,8 +1009,8 @@ export function Settings() {
           <Separator className="bg-black/5 dark:bg-white/5" />
 
           {/* Updates */}
-          <div>
-            <h2 className="text-3xl font-serif text-foreground mb-6 font-normal tracking-tight" style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", Times, serif' }}>
+          {/* <div>
+            <h2 className="text-xl font-bold tracking-tight text-foreground mb-6">
               {t('updates.title')}
             </h2>
             <div className="space-y-6">
@@ -1045,13 +1045,13 @@ export function Settings() {
                 />
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <Separator className="bg-black/5 dark:bg-white/5" />
+          {/* <Separator className="bg-black/5 dark:bg-white/5" /> */}
 
           {/* About */}
           <div>
-            <h2 className="text-3xl font-serif text-foreground mb-6 font-normal tracking-tight" style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", Times, serif' }}>
+            <h2 className="text-xl font-bold tracking-tight text-foreground mb-6">
               {t('about.title')}
             </h2>
             <div className="space-y-3 text-[14px] text-muted-foreground">
@@ -1060,7 +1060,7 @@ export function Settings() {
               </p>
               <p>{t('about.basedOn')}</p>
               <p>{t('about.version', { version: currentVersion })}</p>
-              <div className="flex gap-4 pt-3">
+              {/* <div className="flex gap-4 pt-3">
                 <Button
                   variant="link"
                   className="h-auto p-0 text-[14px] text-blue-500 hover:text-blue-600 font-medium"
@@ -1071,7 +1071,7 @@ export function Settings() {
                 <Button
                   variant="link"
                   className="h-auto p-0 text-[14px] text-blue-500 hover:text-blue-600 font-medium"
-                  onClick={() => window.electron.openExternal('https://github.com/ValueCell-ai/ClawX')}
+                  onClick={() => window.electron.openExternal('https://github.com/ValueCell-ai/DragonClaw')}
                 >
                   {t('about.github')}
                 </Button>
@@ -1082,7 +1082,7 @@ export function Settings() {
                 >
                   {t('about.faq')}
                 </Button>
-              </div>
+              </div> */}
             </div>
           </div>
 

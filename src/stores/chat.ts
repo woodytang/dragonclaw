@@ -118,7 +118,7 @@ function isDuplicateChatEvent(eventState: string, event: Record<string, unknown>
 // [media attached: <path> ...] reference in the Gateway's user message text).
 // Keying by path avoids the race condition of keying by runId (which is only
 // available after the RPC returns, but history may load before that).
-const IMAGE_CACHE_KEY = 'clawx:image-cache';
+const IMAGE_CACHE_KEY = 'DragonClaw:image-cache';
 const IMAGE_CACHE_MAX = 100; // max entries to prevent unbounded growth
 
 function loadImageCache(): Map<string, AttachedFileMeta> {
@@ -1307,114 +1307,114 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     const loadPromise = (async () => {
       const applyLoadedMessages = (rawMessages: RawMessage[], thinkingLevel: string | null) => {
-      // Guard: if the user switched sessions while this async load was in
-      // flight, discard the result to prevent overwriting the new session's
-      // messages with stale data from the old session.
-      if (get().currentSessionKey !== currentSessionKey) return;
+        // Guard: if the user switched sessions while this async load was in
+        // flight, discard the result to prevent overwriting the new session's
+        // messages with stale data from the old session.
+        if (get().currentSessionKey !== currentSessionKey) return;
 
-      // Before filtering: attach images/files from tool_result messages to the next assistant message
-      const messagesWithToolImages = enrichWithToolResultFiles(rawMessages);
-      const filteredMessages = messagesWithToolImages.filter((msg) => !isToolResultRole(msg.role));
-      // Restore file attachments for user/assistant messages (from cache + text patterns)
-      const enrichedMessages = enrichWithCachedImages(filteredMessages);
+        // Before filtering: attach images/files from tool_result messages to the next assistant message
+        const messagesWithToolImages = enrichWithToolResultFiles(rawMessages);
+        const filteredMessages = messagesWithToolImages.filter((msg) => !isToolResultRole(msg.role));
+        // Restore file attachments for user/assistant messages (from cache + text patterns)
+        const enrichedMessages = enrichWithCachedImages(filteredMessages);
 
-      // Preserve the optimistic user message during an active send.
-      // The Gateway may not include the user's message in chat.history
-      // until the run completes, causing it to flash out of the UI.
-      let finalMessages = enrichedMessages;
-      const userMsgAt = get().lastUserMessageAt;
-      if (get().sending && userMsgAt) {
-        const userMsMs = toMs(userMsgAt);
-        const hasRecentUser = enrichedMessages.some(
-          (m) => m.role === 'user' && m.timestamp && Math.abs(toMs(m.timestamp) - userMsMs) < 5000,
-        );
-        if (!hasRecentUser) {
-          const currentMsgs = get().messages;
-          const optimistic = [...currentMsgs].reverse().find(
+        // Preserve the optimistic user message during an active send.
+        // The Gateway may not include the user's message in chat.history
+        // until the run completes, causing it to flash out of the UI.
+        let finalMessages = enrichedMessages;
+        const userMsgAt = get().lastUserMessageAt;
+        if (get().sending && userMsgAt) {
+          const userMsMs = toMs(userMsgAt);
+          const hasRecentUser = enrichedMessages.some(
             (m) => m.role === 'user' && m.timestamp && Math.abs(toMs(m.timestamp) - userMsMs) < 5000,
           );
-          if (optimistic) {
-            finalMessages = [...enrichedMessages, optimistic];
+          if (!hasRecentUser) {
+            const currentMsgs = get().messages;
+            const optimistic = [...currentMsgs].reverse().find(
+              (m) => m.role === 'user' && m.timestamp && Math.abs(toMs(m.timestamp) - userMsMs) < 5000,
+            );
+            if (optimistic) {
+              finalMessages = [...enrichedMessages, optimistic];
+            }
           }
         }
-      }
 
-      set({ messages: finalMessages, thinkingLevel, loading: false });
+        set({ messages: finalMessages, thinkingLevel, loading: false });
 
-      // Extract first user message text as a session label for display in the toolbar.
-      // Skip main sessions (key ends with ":main") — they rely on the Gateway-provided
-      // displayName (e.g. the configured agent name "ClawX") instead.
-      const isMainSession = currentSessionKey.endsWith(':main');
-      if (!isMainSession) {
-        const firstUserMsg = finalMessages.find((m) => m.role === 'user');
-        if (firstUserMsg) {
-          const labelText = getMessageText(firstUserMsg.content).trim();
-          if (labelText) {
-            const truncated = labelText.length > 50 ? `${labelText.slice(0, 50)}…` : labelText;
-            set((s) => ({
-              sessionLabels: { ...s.sessionLabels, [currentSessionKey]: truncated },
-            }));
+        // Extract first user message text as a session label for display in the toolbar.
+        // Skip main sessions (key ends with ":main") — they rely on the Gateway-provided
+        // displayName (e.g. the configured agent name "DragonClaw") instead.
+        const isMainSession = currentSessionKey.endsWith(':main');
+        if (!isMainSession) {
+          const firstUserMsg = finalMessages.find((m) => m.role === 'user');
+          if (firstUserMsg) {
+            const labelText = getMessageText(firstUserMsg.content).trim();
+            if (labelText) {
+              const truncated = labelText.length > 50 ? `${labelText.slice(0, 50)}…` : labelText;
+              set((s) => ({
+                sessionLabels: { ...s.sessionLabels, [currentSessionKey]: truncated },
+              }));
+            }
           }
         }
-      }
 
-      // Record last activity time from the last message in history
-      const lastMsg = finalMessages[finalMessages.length - 1];
-      if (lastMsg?.timestamp) {
-        const lastAt = toMs(lastMsg.timestamp);
-        set((s) => ({
-          sessionLastActivity: { ...s.sessionLastActivity, [currentSessionKey]: lastAt },
-        }));
-      }
+        // Record last activity time from the last message in history
+        const lastMsg = finalMessages[finalMessages.length - 1];
+        if (lastMsg?.timestamp) {
+          const lastAt = toMs(lastMsg.timestamp);
+          set((s) => ({
+            sessionLastActivity: { ...s.sessionLastActivity, [currentSessionKey]: lastAt },
+          }));
+        }
 
-      // Async: load missing image previews from disk (updates in background)
-      loadMissingPreviews(finalMessages).then((updated) => {
-        if (updated) {
-          // Create new object references so React.memo detects changes.
-          // loadMissingPreviews mutates AttachedFileMeta in place, so we
-          // must produce fresh message + file references for each affected msg.
-          set({
-            messages: finalMessages.map(msg =>
-              msg._attachedFiles
-                ? { ...msg, _attachedFiles: msg._attachedFiles.map(f => ({ ...f })) }
-                : msg
-            ),
+        // Async: load missing image previews from disk (updates in background)
+        loadMissingPreviews(finalMessages).then((updated) => {
+          if (updated) {
+            // Create new object references so React.memo detects changes.
+            // loadMissingPreviews mutates AttachedFileMeta in place, so we
+            // must produce fresh message + file references for each affected msg.
+            set({
+              messages: finalMessages.map(msg =>
+                msg._attachedFiles
+                  ? { ...msg, _attachedFiles: msg._attachedFiles.map(f => ({ ...f })) }
+                  : msg
+              ),
+            });
+          }
+        });
+        const { pendingFinal, lastUserMessageAt, sending: isSendingNow } = get();
+
+        // If we're sending but haven't received streaming events, check
+        // whether the loaded history reveals intermediate tool-call activity.
+        // This surfaces progress via the pendingFinal → ActivityIndicator path.
+        const userMsTs = lastUserMessageAt ? toMs(lastUserMessageAt) : 0;
+        const isAfterUserMsg = (msg: RawMessage): boolean => {
+          if (!userMsTs || !msg.timestamp) return true;
+          return toMs(msg.timestamp) >= userMsTs;
+        };
+
+        if (isSendingNow && !pendingFinal) {
+          const hasRecentAssistantActivity = [...filteredMessages].reverse().some((msg) => {
+            if (msg.role !== 'assistant') return false;
+            return isAfterUserMsg(msg);
           });
+          if (hasRecentAssistantActivity) {
+            set({ pendingFinal: true });
+          }
         }
-      });
-      const { pendingFinal, lastUserMessageAt, sending: isSendingNow } = get();
 
-      // If we're sending but haven't received streaming events, check
-      // whether the loaded history reveals intermediate tool-call activity.
-      // This surfaces progress via the pendingFinal → ActivityIndicator path.
-      const userMsTs = lastUserMessageAt ? toMs(lastUserMessageAt) : 0;
-      const isAfterUserMsg = (msg: RawMessage): boolean => {
-        if (!userMsTs || !msg.timestamp) return true;
-        return toMs(msg.timestamp) >= userMsTs;
-      };
-
-      if (isSendingNow && !pendingFinal) {
-        const hasRecentAssistantActivity = [...filteredMessages].reverse().some((msg) => {
-          if (msg.role !== 'assistant') return false;
-          return isAfterUserMsg(msg);
-        });
-        if (hasRecentAssistantActivity) {
-          set({ pendingFinal: true });
+        // If pendingFinal, check whether the AI produced a final text response.
+        if (pendingFinal || get().pendingFinal) {
+          const recentAssistant = [...filteredMessages].reverse().find((msg) => {
+            if (msg.role !== 'assistant') return false;
+            if (!hasNonToolAssistantContent(msg)) return false;
+            return isAfterUserMsg(msg);
+          });
+          if (recentAssistant) {
+            clearHistoryPoll();
+            set({ sending: false, activeRunId: null, pendingFinal: false });
+          }
         }
-      }
-
-      // If pendingFinal, check whether the AI produced a final text response.
-      if (pendingFinal || get().pendingFinal) {
-        const recentAssistant = [...filteredMessages].reverse().find((msg) => {
-          if (msg.role !== 'assistant') return false;
-          if (!hasNonToolAssistantContent(msg)) return false;
-          return isAfterUserMsg(msg);
-        });
-        if (recentAssistant) {
-          clearHistoryPoll();
-          set({ sending: false, activeRunId: null, pendingFinal: false });
-        }
-      }
       };
 
       try {
@@ -1459,7 +1459,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         // Only update load time if we actually didn't time out
         _lastHistoryLoadAtBySession.set(currentSessionKey, Date.now());
       }
-      
+
       const active = _historyLoadInFlight.get(currentSessionKey);
       if (active === loadPromise) {
         _historyLoadInFlight.delete(currentSessionKey);

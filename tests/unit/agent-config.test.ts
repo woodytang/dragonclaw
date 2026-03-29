@@ -5,8 +5,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const { testHome, testUserData } = vi.hoisted(() => {
   const suffix = Math.random().toString(36).slice(2);
   return {
-    testHome: `/tmp/clawx-agent-config-${suffix}`,
-    testUserData: `/tmp/clawx-agent-config-user-data-${suffix}`,
+    testHome: `/tmp/DragonClaw-agent-config-${suffix}`,
+    testUserData: `/tmp/DragonClaw-agent-config-user-data-${suffix}`,
   };
 });
 
@@ -255,7 +255,7 @@ describe('agent config lifecycle', () => {
     );
     await writeFile(join(test2WorkspaceDir, 'AGENTS.md'), '# test2', 'utf8');
 
-    const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
+    const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => { });
     const { deleteAgentConfig } = await import('@electron/utils/agent-config');
 
     const { snapshot } = await deleteAgentConfig('test2');
@@ -304,8 +304,8 @@ describe('agent config lifecycle', () => {
     await mkdir(customWorkspaceDir, { recursive: true });
     await writeFile(join(customWorkspaceDir, 'AGENTS.md'), '# custom', 'utf8');
 
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => { });
+    const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => { });
     const { deleteAgentConfig } = await import('@electron/utils/agent-config');
 
     await deleteAgentConfig('test2');

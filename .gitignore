@@ -65,5 +65,6 @@ build/
 artifacts/
 docs/pr-session-notes-*.md
 
+.agent/
 .cursor/
 .pnpm-store/

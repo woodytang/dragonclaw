@@ -38,7 +38,7 @@ async function allocatePort(): Promise<number> {
   });
 }
 
-async function launchClawXElectron(homeDir: string, userDataDir: string): Promise<ElectronApplication> {
+async function launchDragonClawElectron(homeDir: string, userDataDir: string): Promise<ElectronApplication> {
   const hostApiPort = await allocatePort();
   const electronEnv = process.platform === 'linux'
     ? { ELECTRON_DISABLE_SANDBOX: '1' }
@@ -54,9 +54,9 @@ async function launchClawXElectron(homeDir: string, userDataDir: string): Promis
       APPDATA: join(homeDir, 'AppData', 'Roaming'),
       LOCALAPPDATA: join(homeDir, 'AppData', 'Local'),
       XDG_CONFIG_HOME: join(homeDir, '.config'),
-      CLAWX_E2E: '1',
-      CLAWX_USER_DATA_DIR: userDataDir,
-      CLAWX_PORT_CLAWX_HOST_API: String(hostApiPort),
+      DragonClaw_E2E: '1',
+      DragonClaw_USER_DATA_DIR: userDataDir,
+      DragonClaw_PORT_DragonClaw_HOST_API: String(hostApiPort),
     },
     timeout: 90_000,
   });
@@ -64,7 +64,7 @@ async function launchClawXElectron(homeDir: string, userDataDir: string): Promis
 
 export const test = base.extend<ElectronFixtures>({
   homeDir: async ({ browserName: _browserName }, provideHomeDir) => {
-    const homeDir = await mkdtemp(join(tmpdir(), 'clawx-e2e-home-'));
+    const homeDir = await mkdtemp(join(tmpdir(), 'DragonClaw-e2e-home-'));
     await mkdir(join(homeDir, '.config'), { recursive: true });
     await mkdir(join(homeDir, 'AppData', 'Local'), { recursive: true });
     await mkdir(join(homeDir, 'AppData', 'Roaming'), { recursive: true });
@@ -76,7 +76,7 @@ export const test = base.extend<ElectronFixtures>({
   },
 
   userDataDir: async ({ browserName: _browserName }, provideUserDataDir) => {
-    const userDataDir = await mkdtemp(join(tmpdir(), 'clawx-e2e-user-data-'));
+    const userDataDir = await mkdtemp(join(tmpdir(), 'DragonClaw-e2e-user-data-'));
     try {
       await provideUserDataDir(userDataDir);
     } finally {
@@ -85,7 +85,7 @@ export const test = base.extend<ElectronFixtures>({
   },
 
   launchElectronApp: async ({ homeDir, userDataDir }, provideLauncher) => {
-    await provideLauncher(async () => await launchClawXElectron(homeDir, userDataDir));
+    await provideLauncher(async () => await launchDragonClawElectron(homeDir, userDataDir));
   },
 
   electronApp: async ({ launchElectronApp }, provideElectronApp) => {
@@ -99,7 +99,7 @@ export const test = base.extend<ElectronFixtures>({
       await provideElectronApp(app);
     } finally {
       if (!appClosed) {
-        await app.close().catch(() => {});
+        await app.close().catch(() => { });
       }
     }
   },

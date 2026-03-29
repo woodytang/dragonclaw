@@ -198,7 +198,7 @@ export function Models() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-start justify-between mb-12 shrink-0 gap-4">
           <div>
-            <h1 data-testid="models-page-title" className="text-5xl md:text-6xl font-serif text-foreground mb-3 font-normal tracking-tight" style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", Times, serif' }}>
+            <h1 data-testid="models-page-title" className="text-3xl font-bold tracking-tight text-foreground mb-3">
               {t('dashboard:models.title')}
             </h1>
             <p className="text-[17px] text-foreground/70 font-medium">
@@ -215,7 +215,7 @@ export function Models() {
 
           {/* Token Usage History Section */}
           <div>
-            <h2 className="text-3xl font-serif text-foreground mb-6 font-normal tracking-tight" style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", Times, serif' }}>
+            <h2 className="text-xl font-bold tracking-tight text-foreground mb-6">
               {t('dashboard:recentTokenHistory.title', 'Token Usage History')}
             </h2>
             <div>

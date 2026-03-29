@@ -53,12 +53,12 @@ export function createTray(mainWindow: BrowserWindow): Tray {
   if (process.platform === 'darwin') {
     icon.setTemplateImage(true);
   }
-  
+
   tray = new Tray(icon);
-  
+
   // Set tooltip
-  tray.setToolTip('ClawX - AI Assistant');
-  
+  tray.setToolTip('DragonClaw - AI Assistant');
+
   const showWindow = () => {
     if (mainWindow.isDestroyed()) return;
     mainWindow.show();
@@ -68,7 +68,7 @@ export function createTray(mainWindow: BrowserWindow): Tray {
   // Create context menu
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: 'Show ClawX',
+      label: 'Show DragonClaw',
       click: showWindow,
     },
     {
@@ -122,15 +122,15 @@ export function createTray(mainWindow: BrowserWindow): Tray {
       type: 'separator',
     },
     {
-      label: 'Quit ClawX',
+      label: 'Quit DragonClaw',
       click: () => {
         app.quit();
       },
     },
   ]);
-  
+
   tray.setContextMenu(contextMenu);
-  
+
   // Click to show window (Windows/Linux)
   tray.on('click', () => {
     if (mainWindow.isDestroyed()) return;
@@ -141,14 +141,14 @@ export function createTray(mainWindow: BrowserWindow): Tray {
       mainWindow.focus();
     }
   });
-  
+
   // Double-click to show window (Windows)
   tray.on('double-click', () => {
     if (mainWindow.isDestroyed()) return;
     mainWindow.show();
     mainWindow.focus();
   });
-  
+
   return tray;
 }
 
@@ -157,7 +157,7 @@ export function createTray(mainWindow: BrowserWindow): Tray {
  */
 export function updateTrayStatus(status: string): void {
   if (tray) {
-    tray.setToolTip(`ClawX - ${status}`);
+    tray.setToolTip(`DragonClaw - ${status}`);
   }
 }
 

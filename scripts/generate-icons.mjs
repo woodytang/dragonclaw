@@ -12,7 +12,7 @@ const PROJECT_ROOT = path.resolve(__dirname, '..');
 const ICONS_DIR = path.join(PROJECT_ROOT, 'resources', 'icons');
 const SVG_SOURCE = path.join(ICONS_DIR, 'icon.svg');
 
-echo`🎨 Generating ClawX icons using Node.js...`;
+echo`🎨 Generating DragonClaw icons using Node.js...`;
 
 // Check if SVG source exists
 if (!fs.existsSync(SVG_SOURCE)) {
@@ -26,8 +26,19 @@ await fs.ensureDir(ICONS_DIR);
 try {
   // 1. Generate Master PNG Buffer (1024x1024)
   echo`  Processing SVG source...`;
-  const masterPngBuffer = await sharp(SVG_SOURCE)
-    .resize(1024, 1024)
+  
+  // Apple's standard squircle background for 1024x1024 is roughly 231px border radius
+  const backgroundSvg = Buffer.from(
+    '<svg width="1024" height="1024"><rect x="0" y="0" width="1024" height="1024" rx="231" ry="231" fill="#FFFFFF" /></svg>'
+  );
+
+  // Resize the actual logo to be slightly smaller (e.g. 768px) so it sits inside the background with padding
+  const foregroundBuffer = await sharp(SVG_SOURCE)
+    .resize(768, 768, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .toBuffer();
+
+  const masterPngBuffer = await sharp(backgroundSvg)
+    .composite([{ input: foregroundBuffer, gravity: 'center' }])
     .png() // Ensure it's PNG
     .toBuffer();
 
@@ -44,7 +55,7 @@ try {
   // Defaulting to Bezier (3) for quality or Hermite (2) for speed. Let's use 2 (Hermite) as it's balanced.
   echo`🪟 Generating Windows .ico...`;
   const icoBuffer = png2icons.createICO(masterPngBuffer, png2icons.HERMITE, 0, false);
-  
+
   if (icoBuffer) {
     fs.writeFileSync(path.join(ICONS_DIR, 'icon.ico'), icoBuffer);
     echo`  ✅ Created icon.ico`;
@@ -56,7 +67,7 @@ try {
   // 3. Generate macOS .icns
   echo`🍎 Generating macOS .icns...`;
   const icnsBuffer = png2icons.createICNS(masterPngBuffer, png2icons.HERMITE, 0);
-  
+
   if (icnsBuffer) {
     fs.writeFileSync(path.join(ICONS_DIR, 'icon.icns'), icnsBuffer);
     echo`  ✅ Created icon.icns`;
@@ -68,7 +79,7 @@ try {
   echo`🐧 Generating Linux PNG icons...`;
   const linuxSizes = [16, 32, 48, 64, 128, 256, 512];
   let generatedCount = 0;
-  
+
   for (const size of linuxSizes) {
     await sharp(masterPngBuffer)
       .resize(size, size)
@@ -80,7 +91,7 @@ try {
   // 5. Generate macOS Tray Icon Template
   echo`📍 Generating macOS tray icon template...`;
   const TRAY_SVG_SOURCE = path.join(ICONS_DIR, 'tray-icon-template.svg');
-  
+
   if (fs.existsSync(TRAY_SVG_SOURCE)) {
     await sharp(TRAY_SVG_SOURCE)
       .resize(22, 22)

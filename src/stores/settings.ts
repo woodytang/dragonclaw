@@ -80,11 +80,11 @@ const defaultSettings = {
   proxyAllServer: '',
   proxyBypassRules: '<local>;localhost;127.0.0.1;::1',
   updateChannel: 'stable' as UpdateChannel,
-  autoCheckUpdate: true,
+  autoCheckUpdate: false,
   autoDownloadUpdate: false,
   sidebarCollapsed: false,
   devModeUnlocked: false,
-  setupComplete: false,
+  setupComplete: true,
 };
 
 export const useSettingsStore = create<SettingsState>()(
@@ -178,7 +178,7 @@ export const useSettingsStore = create<SettingsState>()(
       resetSettings: () => set(defaultSettings),
     }),
     {
-      name: 'clawx-settings',
+      name: 'DragonClaw-settings',
     }
   )
 );

@@ -5,8 +5,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const { testHome, testUserData } = vi.hoisted(() => {
   const suffix = Math.random().toString(36).slice(2);
   return {
-    testHome: `/tmp/clawx-openclaw-auth-${suffix}`,
-    testUserData: `/tmp/clawx-openclaw-auth-user-data-${suffix}`,
+    testHome: `/tmp/DragonClaw-openclaw-auth-${suffix}`,
+    testUserData: `/tmp/DragonClaw-openclaw-auth-user-data-${suffix}`,
   };
 });
 
@@ -97,7 +97,7 @@ describe('saveProviderKeyToOpenClaw', () => {
       'utf8',
     );
 
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => { });
     const { saveProviderKeyToOpenClaw } = await import('@electron/utils/openclaw-auth');
 
     await saveProviderKeyToOpenClaw('openrouter', 'sk-test');
@@ -316,7 +316,7 @@ describe('sanitizeOpenClawConfig', () => {
   it('skips sanitization when openclaw.json does not exist', async () => {
     // Ensure the .openclaw dir doesn't exist at all
     const { sanitizeOpenClawConfig } = await import('@electron/utils/openclaw-auth');
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => { });
 
     // Should not throw and should not create the file
     await expect(sanitizeOpenClawConfig()).resolves.toBeUndefined();
@@ -336,7 +336,7 @@ describe('sanitizeOpenClawConfig', () => {
     const before = await readFile(configPath, 'utf8');
 
     const { sanitizeOpenClawConfig } = await import('@electron/utils/openclaw-auth');
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => { });
 
     await sanitizeOpenClawConfig();
 
@@ -353,7 +353,7 @@ describe('sanitizeOpenClawConfig', () => {
     await writeOpenClawJson({});
 
     const { sanitizeOpenClawConfig } = await import('@electron/utils/openclaw-auth');
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => { });
 
     await sanitizeOpenClawConfig();
 
@@ -374,7 +374,7 @@ describe('sanitizeOpenClawConfig', () => {
     });
 
     const { sanitizeOpenClawConfig } = await import('@electron/utils/openclaw-auth');
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => { });
 
     await sanitizeOpenClawConfig();
 

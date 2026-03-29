@@ -63,10 +63,15 @@ module.exports = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        'watermark-pulse': {
+          '0%, 100%': { opacity: '0.03' },
+          '50%': { opacity: '0.06' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'watermark-pulse': 'watermark-pulse 6s ease-in-out infinite',
       },
     },
   },

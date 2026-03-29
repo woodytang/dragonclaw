@@ -29,7 +29,7 @@ function getEventSource(): EventSource {
 
 function allowSseFallback(): boolean {
   try {
-    return window.localStorage.getItem('clawx:allow-sse-fallback') === '1';
+    return window.localStorage.getItem('DragonClaw:allow-sse-fallback') === '1';
   } catch {
     return false;
   }
@@ -62,7 +62,7 @@ export function subscribeHostEvent<T = unknown>(
 
   if (!allowSseFallback()) {
     console.warn(`[host-events] no IPC mapping for event "${eventName}", SSE fallback disabled`);
-    return () => {};
+    return () => { };
   }
 
   const source = getEventSource();

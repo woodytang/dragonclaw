@@ -9,37 +9,37 @@ import { Menu, app, shell, BrowserWindow } from 'electron';
  */
 export function createMenu(): void {
   const isMac = process.platform === 'darwin';
-  
+
   const template: Electron.MenuItemConstructorOptions[] = [
     // App menu (macOS only)
     ...(isMac
       ? [
-          {
-            label: app.name,
-            submenu: [
-              { role: 'about' as const },
-              { type: 'separator' as const },
-              {
-                label: 'Preferences...',
-                accelerator: 'Cmd+,',
-                click: () => {
-                  const win = BrowserWindow.getFocusedWindow();
-                  win?.webContents.send('navigate', '/settings');
-                },
+        {
+          label: app.name,
+          submenu: [
+            { role: 'about' as const },
+            { type: 'separator' as const },
+            {
+              label: 'Preferences...',
+              accelerator: 'Cmd+,',
+              click: () => {
+                const win = BrowserWindow.getFocusedWindow();
+                win?.webContents.send('navigate', '/settings');
               },
-              { type: 'separator' as const },
-              { role: 'services' as const },
-              { type: 'separator' as const },
-              { role: 'hide' as const },
-              { role: 'hideOthers' as const },
-              { role: 'unhide' as const },
-              { type: 'separator' as const },
-              { role: 'quit' as const },
-            ],
-          },
-        ]
+            },
+            { type: 'separator' as const },
+            { role: 'services' as const },
+            { type: 'separator' as const },
+            { role: 'hide' as const },
+            { role: 'hideOthers' as const },
+            { role: 'unhide' as const },
+            { type: 'separator' as const },
+            { role: 'quit' as const },
+          ],
+        },
+      ]
       : []),
-    
+
     // File menu
     {
       label: 'File',
@@ -56,7 +56,7 @@ export function createMenu(): void {
         isMac ? { role: 'close' } : { role: 'quit' },
       ],
     },
-    
+
     // Edit menu
     {
       label: 'Edit',
@@ -69,18 +69,18 @@ export function createMenu(): void {
         { role: 'paste' },
         ...(isMac
           ? [
-              { role: 'pasteAndMatchStyle' as const },
-              { role: 'delete' as const },
-              { role: 'selectAll' as const },
-            ]
+            { role: 'pasteAndMatchStyle' as const },
+            { role: 'delete' as const },
+            { role: 'selectAll' as const },
+          ]
           : [
-              { role: 'delete' as const },
-              { type: 'separator' as const },
-              { role: 'selectAll' as const },
-            ]),
+            { role: 'delete' as const },
+            { type: 'separator' as const },
+            { role: 'selectAll' as const },
+          ]),
       ],
     },
-    
+
     // View menu
     {
       label: 'View',
@@ -96,7 +96,7 @@ export function createMenu(): void {
         { role: 'togglefullscreen' },
       ],
     },
-    
+
     // Navigate menu
     {
       label: 'Navigate',
@@ -151,7 +151,7 @@ export function createMenu(): void {
         },
       ],
     },
-    
+
     // Window menu
     {
       label: 'Window',
@@ -160,15 +160,15 @@ export function createMenu(): void {
         { role: 'zoom' },
         ...(isMac
           ? [
-              { type: 'separator' as const },
-              { role: 'front' as const },
-              { type: 'separator' as const },
-              { role: 'window' as const },
-            ]
+            { type: 'separator' as const },
+            { role: 'front' as const },
+            { type: 'separator' as const },
+            { role: 'window' as const },
+          ]
           : [{ role: 'close' as const }]),
       ],
     },
-    
+
     // Help menu
     {
       role: 'help',
@@ -182,7 +182,7 @@ export function createMenu(): void {
         {
           label: 'Report Issue',
           click: async () => {
-            await shell.openExternal('https://github.com/ValueCell-ai/ClawX/issues');
+            await shell.openExternal('https://github.com/ValueCell-ai/DragonClaw/issues');
           },
         },
         { type: 'separator' },
@@ -195,7 +195,7 @@ export function createMenu(): void {
       ],
     },
   ];
-  
+
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 }
