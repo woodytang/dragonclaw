@@ -370,6 +370,7 @@ jobs:
   #   releases/vX.Y.Z/ → permanent archive, never deleted
   # ──────────────────────────────────────────────────────────────
   upload-oss:
+    if: false  # Temporarily disabled by user order (skip OSS uploads)
     needs: release
     runs-on: ubuntu-latest
 
@@ -556,7 +557,7 @@ jobs:
   # all platform artifacts are ready.
   # ──────────────────────────────────────────────────────────────
   finalize:
-    needs: [publish, upload-oss]
+    needs: [publish]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
 
